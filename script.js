@@ -1,13 +1,15 @@
-// Konfigurasi Discord Webhook
+// ============================================
+// CONFIGURATION
+// ============================================
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1249680253094334484/qpw0h0LpKJugKgzZRbMeTF0j2i3LbXeie9hg1xPgB5DEk9YYFYmyij2z2NgR80y5aNtD';
-
-// Konfigurasi Cooldown (30 menit dalam milidetik)
 const COOLDOWN_DURATION = 30 * 60 * 1000; // 30 menit
+const COOLDOWN_KEY = 'ngl_last_sent';
 
-// State
 let fingerprint = null;
 
-// Inisialisasi
+// ============================================
+// INITIALIZATION
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
     initializeFingerprint();
     checkCooldown();
@@ -15,20 +17,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm();
 });
 
-// Setup fingerprint detection
+// ============================================
+// FINGERPRINT DETECTION
+// ============================================
 async function initializeFingerprint() {
     try {
         const fp = await FingerprintJS.load();
         const result = await fp.get();
         fingerprint = result.visitorId;
-        console.log('Fingerprint initialized:', fingerprint);
     } catch (error) {
         console.error('Error initializing fingerprint:', error);
         fingerprint = 'unknown';
     }
 }
 
-// Setup character counter
+// ============================================
+// CHARACTER COUNTER
+// ============================================
 function setupCharCounter() {
     const messageInput = document.getElementById('messageInput');
     const charCount = document.getElementById('charCount');
@@ -37,7 +42,7 @@ function setupCharCounter() {
         const count = messageInput.value.length;
         charCount.textContent = count;
 
-        // Change color when approaching limit
+        // Update color based on character count
         if (count > 450) {
             charCount.style.color = '#cc0000';
         } else if (count > 400) {
@@ -48,215 +53,159 @@ function setupCharCounter() {
     });
 }
 
-// Check cooldown status
+// ============================================
+// COOLDOWN MANAGEMENT
+// ============================================
 function checkCooldown() {
-    const lastSent = localStorage.getItem('ngl_last_sent');
-    const cooldownContainer = document.getElementById('cooldownContainer');
-    const cooldownTimer = document.getElementById('cooldownTimer');
-    const form = document.getElementById('messageForm');
-    const title = document.getElementById('title');
-    const subtitle = document.getElementById('subtitle');
- 
+    const lastSent = localStorage.getItem(COOLDOWN_KEY);
+    const elements = getElements();
+    
     if (!lastSent) {
-        cooldownContainer.classList.add('hidden');
-        form.classList.remove('hidden');
-        title.classList.remove('hidden');
-        subtitle.classList.remove('hidden');
+        showForm(elements);
         return;
     }
- 
-    const now = Date.now();
-    const elapsed = now - parseInt(lastSent);
- 
+
+    const elapsed = Date.now() - parseInt(lastSent);
+    
     if (elapsed < COOLDOWN_DURATION) {
-        const remaining = COOLDOWN_DURATION - elapsed;
-        const minutes = Math.floor(remaining / 60000);
-        const seconds = Math.floor((remaining % 60000) / 1000);
- 
-        // Hide form and show cooldown
-        form.classList.add('hidden');
-        cooldownContainer.classList.remove('hidden');
-        title.classList.add('hidden');
-        subtitle.classList.add('hidden');
-        cooldownTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
- 
-        // Update timer every second
-        const timerInterval = setInterval(() => {
-            const now = Date.now();
-            const elapsed = now - parseInt(lastSent);
-            const remaining = COOLDOWN_DURATION - elapsed;
- 
-            if (remaining <= 0) {
-                clearInterval(timerInterval);
-                cooldownContainer.classList.add('hidden');
-                form.classList.remove('hidden');
-                title.classList.remove('hidden');
-                subtitle.classList.remove('hidden');
-                localStorage.removeItem('ngl_last_sent');
-            } else {
-                const minutes = Math.floor(remaining / 60000);
-                const seconds = Math.floor((remaining % 60000) / 1000);
-                cooldownTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }, 1000);
+        startCooldownTimer(lastSent, elements);
     } else {
-        // Cooldown is over
-        form.classList.remove('hidden');
-        cooldownContainer.classList.add('hidden');
-        title.classList.remove('hidden');
-        subtitle.classList.remove('hidden');
-        localStorage.removeItem('ngl_last_sent');
+        showForm(elements);
+        localStorage.removeItem(COOLDOWN_KEY);
     }
 }
 
-// Setup form submission
-function setupForm() {
-    const form = document.getElementById('messageForm');
-    form.addEventListener('submit', handleSubmit);
+function startCooldownTimer(lastSent, elements) {
+    const { form, cooldownContainer, cooldownTimer, title, subtitle } = elements;
+    const updateTimer = () => {
+        const remaining = COOLDOWN_DURATION - (Date.now() - parseInt(lastSent));
+        
+        if (remaining <= 0) {
+            showForm(elements);
+            localStorage.removeItem(COOLDOWN_KEY);
+        } else {
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            cooldownTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            setTimeout(updateTimer, 1000);
+        }
+    };
+    
+    hideForm(elements);
+    updateTimer();
 }
 
-// Handle form submission
+function showForm(elements) {
+    const { form, cooldownContainer, title, subtitle } = elements;
+    form.classList.remove('hidden');
+    cooldownContainer.classList.add('hidden');
+    title.classList.remove('hidden');
+    subtitle.classList.remove('hidden');
+}
+
+function hideForm(elements) {
+    const { form, cooldownContainer, title, subtitle, cooldownTimer } = elements;
+    form.classList.add('hidden');
+    cooldownContainer.classList.remove('hidden');
+    title.classList.add('hidden');
+    subtitle.classList.add('hidden');
+    
+    const remaining = COOLDOWN_DURATION - (Date.now() - parseInt(localStorage.getItem(COOLDOWN_KEY)));
+    const minutes = Math.floor(remaining / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+    cooldownTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function getElements() {
+    return {
+        form: document.getElementById('messageForm'),
+        cooldownContainer: document.getElementById('cooldownContainer'),
+        cooldownTimer: document.getElementById('cooldownTimer'),
+        title: document.getElementById('title'),
+        subtitle: document.getElementById('subtitle')
+    };
+}
+
+// ============================================
+// FORM HANDLING
+// ============================================
+function setupForm() {
+    document.getElementById('messageForm').addEventListener('submit', handleSubmit);
+}
+
 async function handleSubmit(e) {
     e.preventDefault();
-
-    const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value.trim();
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const btnLoader = document.getElementById('btnLoader');
-    const messageDiv = document.getElementById('message');
-    const cooldownContainer = document.getElementById('cooldownContainer');
-
+    
+    const message = document.getElementById('messageInput').value.trim();
     if (!message) {
         showMessage('Pesan tidak boleh kosong!', 'error');
         return;
     }
 
-    // Check cooldown before sending
-    const lastSent = localStorage.getItem('ngl_last_sent');
-    if (lastSent) {
-        const now = Date.now();
-        const elapsed = now - parseInt(lastSent);
-        if (elapsed < COOLDOWN_DURATION) {
-            showMessage('Anda masih dalam cooldown!', 'error');
-            checkCooldown();
-            return;
-        }
+    // Check cooldown
+    const lastSent = localStorage.getItem(COOLDOWN_KEY);
+    if (lastSent && (Date.now() - parseInt(lastSent)) < COOLDOWN_DURATION) {
+        showMessage('Anda masih dalam cooldown!', 'error');
+        checkCooldown();
+        return;
     }
 
-    // Disable form and show loading
-    submitBtn.disabled = true;
-    btnText.classList.add('hidden');
-    btnLoader.classList.remove('hidden');
-    messageDiv.classList.add('hidden');
-    cooldownContainer.classList.add('hidden');
+    // Set loading state
+    const elements = {
+        submitBtn: document.getElementById('submitBtn'),
+        btnText: document.getElementById('btnText'),
+        btnLoader: document.getElementById('btnLoader'),
+        messageDiv: document.getElementById('message')
+    };
+    
+    setLoading(true, elements);
 
     try {
         await sendToDiscord(message);
-        // console.log(message);
-        // const encryptedMessage = encryptMessage(message);
-        // console.log(encryptedMessage);
-        // window.location.href = `dist/?msg=${encryptedMessage}`;
-        // return;
-
-        // Save timestamp to localStorage
-        localStorage.setItem('ngl_last_sent', Date.now().toString());
-
-        // Clear form
-        messageInput.value = '';
-        document.getElementById('charCount').textContent = '0';
-
-        // Show success message
+        localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+        clearForm();
         showMessage('Pesan berhasil dikirim!', 'success');
-
-        // Start cooldown timer
-        setTimeout(() => {
-            checkCooldown();
-        }, 500);
-
+        setTimeout(() => checkCooldown(), 500);
     } catch (error) {
         console.error('Error sending message:', error);
         showMessage('Gagal mengirim pesan. Silakan coba lagi.', 'error');
-        
-        // Re-enable form on error
-        submitBtn.disabled = false;
-        btnText.classList.remove('hidden');
-        btnLoader.classList.add('hidden');
+    } finally {
+        setLoading(false, elements);
     }
 }
 
-// Send message to Discord webhook
+function setLoading(loading, elements) {
+    const { submitBtn, btnText, btnLoader } = elements;
+    submitBtn.disabled = loading;
+    btnText.classList.toggle('hidden', loading);
+    btnLoader.classList.toggle('hidden', !loading);
+}
+
+function clearForm() {
+    document.getElementById('messageInput').value = '';
+    document.getElementById('charCount').textContent = '0';
+}
+
+// ============================================
+// DISCORD WEBHOOK
+// ============================================
 async function sendToDiscord(message) {
     if (!DISCORD_WEBHOOK_URL || DISCORD_WEBHOOK_URL === 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
         throw new Error('Discord webhook URL belum dikonfigurasi!');
     }
 
-    // Get user info
-    const userAgent = navigator.userAgent;
-    const language = navigator.language;
-    const platform = navigator.platform;
-    const screenInfo = `${window.screen.width}x${window.screen.height}`;
-    const referrer = document.referrer || 'Direct';
-    const timestamp = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
+    const userInfo = getUserInfo();
+    const encryptedMessage = encryptMessage(message);
+    const components = createComponents(message, encryptedMessage, userInfo);
 
-    // Format User Agent
-    const shortUserAgent = userAgent.length > 100 ? userAgent.substring(0, 100) + '...' : userAgent;
-    const shortReferrer = referrer !== 'Direct' ? (referrer.length > 100 ? referrer.substring(0, 100) + '...' : referrer) : 'Direct';
-
-    // Create components structure
-    const components =
-    {
-        type: 17, // Container component
-        accent_color: null,
-        spoiler: false,
-        components: [
-            {
-                type: 10, // Text content
-                content: `### 📩 **Pesan Baru - NGL**\n\n\`\`\`\n${message}\n\`\`\``
-            },
-            {
-                type: 10,
-                content: `🔐 **Fingerprint:** \`${fingerprint || 'Unknown'}\``
-            },
-            {
-                type: 10,
-                content: `🌐 **Browser:** \`${shortUserAgent}\``
-            },
-            {
-                type: 10,
-                content: `💬 **Bahasa:** \`${language}\` | 💻 **Platform:** \`${platform}\` | 📺 **Resolusi:** \`${screenInfo}\``
-            },
-            {
-                type: 10,
-                content: `🔗 **Referrer:** \`${shortReferrer}\`\n🕐 **Waktu:** \`${timestamp}\``
-            },
-            {
-                type: 14, // Divider
-                divider: true,
-                spacing: 1
-            },
-            {
-                type: 10,
-                content: `-# System by @mnaputra_ member of cogededevs`
-            }
-        ]
-    }
-
-
-    // Send to Discord
-    const response = await fetch(DISCORD_WEBHOOK_URL + '?with_components=true', {
+    const response = await fetch(`${DISCORD_WEBHOOK_URL}?with_components=true`, {
         method: 'POST',
         headers: {
             'accept': '*/*',
             'accept-language': 'en-US,en;q=0.9,id;q=0.8',
-            'cache-control': 'no-cache',
-            'content-type': 'application/json',
-            'pragma': 'no-cache'
+            'content-type': 'application/json'
         },
-        body: JSON.stringify({
-            components: [components],
-            flags: 32768 // Ephemeral flag
-        })
+        body: JSON.stringify({ components: [components], flags: 32768 })
     });
 
     if (!response.ok) {
@@ -264,42 +213,58 @@ async function sendToDiscord(message) {
     }
 }
 
-// Encrypt message before sending
+function getUserInfo() {
+    const userAgent = navigator.userAgent;
+    return {
+        userAgent: userAgent.length > 100 ? userAgent.substring(0, 100) + '...' : userAgent,
+        language: navigator.language,
+        platform: navigator.platform,
+        screenInfo: `${window.screen.width}x${window.screen.height}`,
+        timestamp: Math.floor(Date.now() / 1000)
+    };
+}
+
+function createComponents(message, encryptedMessage, userInfo) {
+    return {
+        type: 17,
+        accent_color: null,
+        spoiler: false,
+        components: [
+            { type: 10, content: `### 📩 **Pesan Baru - NGL**\n\n\`\`\`\n${message}\n\`\`\`` },
+            { type: 10, content: `🔐 **Fingerprint:** \`${fingerprint || 'Unknown'}\`` },
+            { type: 10, content: `💬 **Bahasa:** \`${userInfo.language}\` | 💻 **Platform:** \`${userInfo.platform}\` | 📺 **Resolusi:** \`${userInfo.screenInfo}\`` },
+            { type: 10, content: `🕐 **Waktu:** <t:${userInfo.timestamp}:F>` },
+            { type: 10, content: `🔗 **Answer Link:** [Click here](https://cogedevs.github.io/ngl/dist/?msg=${encryptedMessage})` },
+            { type: 14, divider: true, spacing: 1 },
+            { type: 10, content: `-# System by @mnaputra_ member of cogededevs` }
+        ]
+    };
+}
+
+// ============================================
+// UTILITIES
+// ============================================
 function encryptMessage(message) {
     try {
-        // Simple encryption using base64 and obfuscation
         const encoded = btoa(unescape(encodeURIComponent(message)));
-        
-        // Add timestamp for uniqueness
         const timestamp = Date.now().toString();
         const combined = `${timestamp}|${encoded}`;
-        
-        // Reverse the string
         const reversed = combined.split('').reverse().join('');
-        
-        // Double encode
         const finalEncoded = btoa(reversed);
-        
         return encodeURIComponent(finalEncoded);
     } catch (error) {
         console.error('Error encrypting message:', error);
-        // Fallback to simple base64 if encryption fails
         return encodeURIComponent(btoa(message));
     }
 }
 
-// Show message to user
 function showMessage(text, type) {
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = text;
     messageDiv.className = `message ${type}`;
     messageDiv.classList.remove('hidden');
 
-    // Auto hide success messages after 3 seconds
     if (type === 'success') {
-        setTimeout(() => {
-            messageDiv.classList.add('hidden');
-        }, 3000);
+        setTimeout(() => messageDiv.classList.add('hidden'), 3000);
     }
 }
-
