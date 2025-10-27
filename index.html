@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Me Anything</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="title" id="title">Ask Me Anything</h1>
+            <p class="subtitle" id="subtitle">Kirim pesan anonim Anda di sini</p>
+            
+            <form id="messageForm">
+                <div class="input-group">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Tulis pesan Anda di sini..." 
+                        required
+                        maxlength="500"
+                    ></textarea>
+                    <span class="char-counter"><span id="charCount">0</span>/500</span>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="submit-btn">
+                    <span id="btnText">Kirim Pesan</span>
+                    <span id="btnLoader" class="loader hidden"></span>
+                </button>
+            </form>
+
+            <div id="message" class="message hidden"></div>
+            
+            <div id="cooldownContainer" class="cooldown-container hidden">
+                <div class="cooldown-icon">⏱️</div>
+                <h2 class="cooldown-title">Tunggu Sebentar</h2>
+                <p class="cooldown-subtitle">Pesan Anda telah dikirim</p>
+                <div class="cooldown-timer-wrapper">
+                    <div class="cooldown-timer" id="cooldownTimer">30:00</div>
+                </div>
+                <p class="cooldown-message-text">Sebelum bisa mengirim pesan lagi</p>
+            </div>
+
+            <div class="info-section">
+                <p class="info-text">💬 Lihat jawaban pesan Anda di <a href="https://instagram.com/cof_genesis" target="_blank" rel="noopener noreferrer" class="info-link">instagram.com/cof_genesis</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FingerprintJS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+

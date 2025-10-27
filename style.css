@@ -1,0 +1,469 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    border: 1px solid #e0e0e0;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666666;
+    font-size: 14px;
+    margin-bottom: 32px;
+    font-weight: 400;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    color: #000000;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+textarea::placeholder {
+    color: #999999;
+}
+
+.char-counter {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #999999;
+    margin-top: 8px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: #1a1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.message {
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.success {
+    background: #f0f8f0;
+    color: #2d7a2d;
+    border: 1px solid #c8e6c8;
+}
+
+.message.error {
+    background: #fff0f0;
+    color: #cc0000;
+    border: 1px solid #ffcccc;
+}
+
+/* Cooldown Container - Modern & Elegant */
+.cooldown-container {
+    padding: 32px 24px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.cooldown-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.cooldown-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+
+.cooldown-subtitle {
+    font-size: 14px;
+    color: #999999;
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+.cooldown-timer-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.cooldown-timer {
+    font-size: 36px;
+    font-weight: 600;
+    color: #000000;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+}
+
+.cooldown-message-text {
+    font-size: 13px;
+    color: #666666;
+    margin-top: 16px;
+    font-weight: 400;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Info Section */
+.info-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.info-text {
+    font-size: 13px;
+    color: #666666;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.info-link {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.info-link:hover {
+    color: #000000;
+    border-bottom-color: #000000;
+}
+
+.info-link:active {
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        padding: 32px 24px;
+        border-radius: 20px;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 13px;
+    }
+    
+    textarea {
+        min-height: 150px;
+        font-size: 15px;
+    }
+
+    .cooldown-container {
+        padding: 28px 20px;
+    }
+
+    .cooldown-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .cooldown-title {
+        font-size: 18px;
+    }
+
+    .cooldown-subtitle {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .cooldown-timer {
+        font-size: 32px;
+    }
+
+    .info-section {
+        margin-top: 28px;
+        padding-top: 20px;
+    }
+
+    .info-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+    
+    .title {
+        font-size: 24px;
+    }
+    
+    .subtitle {
+        font-size: 12px;
+        margin-bottom: 24px;
+    }
+    
+    textarea {
+        min-height: 120px;
+        padding: 14px;
+        font-size: 14px;
+    }
+    
+    .submit-btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .cooldown-container {
+        padding: 24px 16px;
+    }
+
+    .cooldown-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    .cooldown-title {
+        font-size: 18px;
+    }
+
+    .cooldown-subtitle {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .cooldown-timer {
+        font-size: 28px;
+        letter-spacing: 0.5px;
+    }
+
+    .cooldown-message-text {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+
+    .info-section {
+        margin-top: 24px;
+        padding-top: 16px;
+    }
+
+    .info-text {
+        font-size: 11px;
+    }
+}
+
+/* Mobile landscape */
+@media (max-height: 600px) and (orientation: landscape) {
+    .container {
+        margin: 20px 0;
+    }
+    
+    .card {
+        padding: 24px;
+    }
+    
+    .title {
+        font-size: 24px;
+        margin-bottom: 4px;
+    }
+    
+    .subtitle {
+        font-size: 12px;
+        margin-bottom: 20px;
+    }
+    
+    textarea {
+        min-height: 100px;
+    }
+
+    .cooldown-container {
+        padding: 20px 16px;
+    }
+
+    .cooldown-icon {
+        font-size: 28px;
+        margin-bottom: 6px;
+    }
+
+    .cooldown-title {
+        font-size: 16px;
+    }
+
+    .cooldown-subtitle {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .cooldown-timer {
+        font-size: 24px;
+    }
+
+    .cooldown-message-text {
+        font-size: 11px;
+        margin-top: 10px;
+    }
+
+    .info-section {
+        margin-top: 20px;
+        padding-top: 14px;
+    }
+
+    .info-text {
+        font-size: 10px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .card {
+        padding: 36px 32px;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1440px) {
+    .card {
+        padding: 48px;
+    }
+    
+    .title {
+        font-size: 36px;
+    }
+    
+    .subtitle {
+        font-size: 15px;
+    }
+}
+

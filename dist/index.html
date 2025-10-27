@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan Anda</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .message-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid #e0e0e0;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .message-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .message-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .message-subtitle {
+            font-size: 14px;
+            color: #999999;
+            font-weight: 400;
+        }
+
+        .message-content {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #000000;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            border-color: #000000;
+            transform: translateY(-2px);
+        }
+
+        .message-info {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .message-info-text {
+            font-size: 13px;
+            color: #999999;
+            line-height: 1.6;
+        }
+
+        .message-info-link {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .message-info-link:hover {
+            border-bottom-color: #000000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .message-card {
+                padding: 36px 28px;
+                border-radius: 20px;
+            }
+
+            .message-icon {
+                font-size: 48px;
+                margin-bottom: 12px;
+            }
+
+            .message-title {
+                font-size: 24px;
+            }
+
+            .message-subtitle {
+                font-size: 13px;
+            }
+
+            .message-content {
+                padding: 20px;
+                font-size: 15px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message-card {
+                padding: 32px 20px;
+                border-radius: 16px;
+            }
+
+            .message-icon {
+                font-size: 40px;
+                margin-bottom: 10px;
+            }
+
+            .message-title {
+                font-size: 22px;
+            }
+
+            .message-subtitle {
+                font-size: 12px;
+            }
+
+            .message-content {
+                padding: 16px;
+                font-size: 14px;
+                min-height: 100px;
+            }
+
+            .message-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+
+            .message-info {
+                margin-top: 28px;
+                padding-top: 20px;
+            }
+
+            .message-info-text {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .message-card {
+                padding: 24px;
+            }
+
+            .message-icon {
+                font-size: 36px;
+                margin-bottom: 8px;
+            }
+
+            .message-title {
+                font-size: 20px;
+            }
+
+            .message-subtitle {
+                font-size: 11px;
+            }
+
+            .message-content {
+                padding: 16px;
+                min-height: 80px;
+                font-size: 14px;
+            }
+
+            .message-header {
+                margin-bottom: 20px;
+            }
+
+            .message-content {
+                margin-bottom: 20px;
+            }
+
+            .message-info {
+                margin-top: 20px;
+                padding-top: 16px;
+            }
+
+            .message-info-text {
+                font-size: 11px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-card" id="messageCard">
+            <div class="message-header">
+                <!-- <div class="message-icon">💬</div> -->
+                <h1 class="message-title">💬 Pesan Anonim baru</h1>
+                <p class="message-subtitle">Ini adalah pesan anonim yang diterima</p>
+            </div>
+
+            <div class="message-content" id="messageContent">
+                Memuat pesan...
+            </div>
+
+            <!-- <div class="message-actions">
+                <button class="btn btn-primary" onclick="window.location.href='../'">Kirim Pesan Lain</button>
+                <button class="btn btn-secondary" onclick="shareMessage()">Bagikan</button>
+            </div> -->
+
+            <div class="message-info">
+                <p class="message-info-text">
+                    💬 System dibuat oleh @mnaputra_ murid dari <a href="https://instagram.com/cof_genesis" target="_blank" rel="noopener noreferrer" class="message-info-link">instagram.com/cof_genesis</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="message-card hidden" id="errorCard">
+            <div class="message-header">
+                <div class="message-icon">⚠️</div>
+                <h1 class="message-title">Pesan Tidak Ditemukan</h1>
+                <p class="message-subtitle">Pesan yang Anda cari tidak tersedia</p>
+            </div>
+
+            <div class="message-actions">
+                <button class="btn btn-primary" onclick="window.location.href='../'">Kembali ke Beranda</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Decrypt message from URL
+        function decryptMessage(encryptedMessage) {
+            try {
+                // Decode the URL
+                const decoded = decodeURIComponent(encryptedMessage);
+                
+                // Decode from base64
+                const decodedBase64 = atob(decoded);
+                
+                // Reverse the string
+                const unreversed = decodedBase64.split('').reverse().join('');
+                
+                // Split timestamp and message
+                const parts = unreversed.split('|');
+                if (parts.length !== 2) {
+                    // Try fallback for old format
+                    return decodeURIComponent(escape(atob(decoded)));
+                }
+                
+                const timestamp = parts[0];
+                const encoded = parts[1];
+                
+                // Decode the actual message
+                const message = decodeURIComponent(escape(atob(encoded)));
+                
+                return message;
+            } catch (error) {
+                console.error('Error decrypting message:', error);
+                // Fallback: try simple base64 decode
+                try {
+                    return decodeURIComponent(escape(atob(encryptedMessage)));
+                } catch (e) {
+                    return null;
+                }
+            }
+        }
+
+        // Get message from URL parameter
+        function getMessageFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const encryptedMessage = urlParams.get('msg');
+            
+            if (!encryptedMessage) {
+                return null;
+            }
+            
+            // Decrypt the message
+            const decryptedMessage = decryptMessage(encryptedMessage);
+            return decryptedMessage;
+        }
+
+        // Display message
+        function displayMessage() {
+            const message = getMessageFromURL();
+            const messageCard = document.getElementById('messageCard');
+            const errorCard = document.getElementById('errorCard');
+            const messageContent = document.getElementById('messageContent');
+
+            if (message && message.trim() !== '') {
+                // Validate message contains at least some readable content
+                if (message.length < 2) {
+                    showError();
+                    return;
+                }
+
+                messageContent.textContent = message;
+                messageCard.classList.remove('hidden');
+                errorCard.classList.add('hidden');
+            } else {
+                showError();
+            }
+        }
+
+        // Show error message
+        function showError() {
+            const messageCard = document.getElementById('messageCard');
+            const errorCard = document.getElementById('errorCard');
+            
+            messageCard.classList.add('hidden');
+            errorCard.classList.remove('hidden');
+        }
+
+        // Share message functionality
+        function shareMessage() {
+            const message = getMessageFromURL();
+            const currentURL = window.location.href;
+
+            if (navigator.share && message) {
+                navigator.share({
+                    title: 'Pesan Anonim',
+                    text: message,
+                    url: currentURL
+                }).catch(err => {
+                    console.log('Error sharing:', err);
+                });
+            } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(currentURL).then(() => {
+                    alert('Link berhasil disalin!');
+                }).catch(err => {
+                    console.log('Error copying:', err);
+                });
+            }
+        }
+
+        // Initialize on page load
+        displayMessage();
+    </script>
+</body>
+</html>
+
