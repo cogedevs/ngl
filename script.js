@@ -154,8 +154,8 @@ async function handleSubmit(e) {
     try {
         await sendToDiscord(message);
         // console.log(message);
-        const encryptedMessage = encryptMessage(message);
-        console.log(encryptedMessage);
+        // const encryptedMessage = encryptMessage(message);
+        // console.log(encryptedMessage);
         // window.location.href = `dist/?msg=${encryptedMessage}`;
         // return;
 
@@ -244,24 +244,24 @@ async function sendToDiscord(message) {
 
 
     // Send to Discord
-    // const response = await fetch(DISCORD_WEBHOOK_URL + '?with_components=true', {
-    //     method: 'POST',
-    //     headers: {
-    //         'accept': '*/*',
-    //         'accept-language': 'en-US,en;q=0.9,id;q=0.8',
-    //         'cache-control': 'no-cache',
-    //         'content-type': 'application/json',
-    //         'pragma': 'no-cache'
-    //     },
-    //     body: JSON.stringify({
-    //         components: [components],
-    //         flags: 32768 // Ephemeral flag
-    //     })
-    // });
+    const response = await fetch(DISCORD_WEBHOOK_URL + '?with_components=true', {
+        method: 'POST',
+        headers: {
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9,id;q=0.8',
+            'cache-control': 'no-cache',
+            'content-type': 'application/json',
+            'pragma': 'no-cache'
+        },
+        body: JSON.stringify({
+            components: [components],
+            flags: 32768 // Ephemeral flag
+        })
+    });
 
-    // if (!response.ok) {
-    //     throw new Error(`HTTP error! status: ${response.status}`);
-    // }
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
 }
 
 // Encrypt message before sending
